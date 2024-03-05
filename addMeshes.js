@@ -17,7 +17,8 @@ import {
 	CylinderGeometry,
 	PlaneGeometry,
 	LinearMipmapLinearFilter,
-	WebGLRenderer
+	WebGLRenderer,
+	CapsuleGeometry 
 } from 'three'
 
 const renderer = new WebGLRenderer();
@@ -55,6 +56,29 @@ export const cover = () => {
 	// boxMesh.userData.name = 'target1'
 	return cover
 }
+
+export const coverdrop = () => {
+	const coverdropgeo = new CircleGeometry(25,32,10,2.5)
+	const coverdropMaterial = new MeshBasicMaterial({ color:0x9FC5E8  })
+	const coverdrop = new Mesh(coverdropgeo, coverdropMaterial)
+	coverdrop.position.set(-2, 26.5, 10)
+	// boxMesh.userData.name = 'target1'
+	return coverdrop
+}
+
+export const coverdrop1 = () => {
+	const coverdropgeo1 = new ConeGeometry(0.7,1,4,8)
+	const coverdropMaterial1 = new MeshBasicMaterial({ color:0x9FC5E8  })
+	const coverdrop1 = new Mesh(coverdropgeo1, coverdropMaterial1)
+	coverdrop1.position.set(-8,4, 10)
+	coverdrop1.rotation.set(0, 0, 1);
+	// boxMesh.userData.name = 'target1'
+	return coverdrop1
+}
+
+
+
+
 
 export const button = () => {
 	const color = loader.load('cover1.png')

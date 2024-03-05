@@ -2,10 +2,12 @@ import './style.css'
 import * as THREE from 'three'
 import { addBoilerPlateMeshes, addStandardMesh } from './addMeshes'
 import { addLight } from './addLights'
-import { background, magicCircle, cover, button, girlcover } from './addMeshes'
+import { background, magicCircle, cover, button, girlcover,coverdrop,coverdrop1 } from './addMeshes'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Model from './Model'
 import gsap from 'gsap'
+
+import { DragControls } from 'three/addons/controls/DragControls.js';
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -33,17 +35,30 @@ const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 //pointer.x or pointer.y
 const mixers = []
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
-controls.dampingFactor = 0.08
+const dragObjects = [
+	meshes.mybow
+ 
+]
+
+// const controls = new OrbitControls(camera, renderer.domElement)
+
+// controls.enableDamping = true
+// controls.dampingFactor = 0.08
 // controls.enablePan = false
 // controls.enableZoom = false
 const clock = new THREE.Clock()
 
 
+
+
+
 const interactable = []
 const modelCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 modelCamera.position.z = 5;
+
+
+
+
 
 init()
 function init() {
@@ -59,6 +74,8 @@ function init() {
 	meshes.cover = cover()
 	meshes.button = button()
 	meshes.girlcover = girlcover()
+	meshes.coverdrop = coverdrop()
+	meshes.coverdrop1 = coverdrop1()
 
 	lights.default = addLight()
 
@@ -70,9 +87,11 @@ function init() {
 	scene.add(meshes.magicCircle)
 
 
-	scene.add(meshes.cover)
-	scene.add(meshes.button)
-	scene.add(meshes.girlcover)
+	// scene.add(meshes.cover)
+	// scene.add(meshes.button)
+	// scene.add(meshes.girlcover)
+	// scene.add(meshes.coverdrop)
+	// scene.add(meshes.coverdrop1)
 
 
 	camera.position.set(0, 0, 200); //设置相机位置
@@ -82,7 +101,10 @@ function init() {
 	instances()
 	resize()
 	animate()
+
 }
+
+
 
 function instances() {
 
@@ -91,14 +113,14 @@ function instances() {
 		url: '/grace22.glb',
 		scene: scene,
 		meshes: meshes,
-		name: 'girl',
+		name: 'mygirl',
 		position: new THREE.Vector3(0, -10.5, 2.5),
-		scale: new THREE.Vector3(10, 10, 10),
+		scale: new THREE.Vector3(0,0,0),
 		mixers: mixers,
 		//replace: true,
 		animationState: true,
 		container: interactable,
-		callback: loader,
+
 
 	})
 	girl.init()
@@ -111,7 +133,7 @@ function instances() {
 		scene: scene,
 		meshes: meshes,
 		name: 'mybear',
-		position: new THREE.Vector3(-14, 10, 1),
+		position: new THREE.Vector3(-16, 10, 2),
 		scale: new THREE.Vector3(0.7, 0.75, 0.7),
 		mixers: mixers,
 		replace: true,
@@ -164,7 +186,7 @@ function instances() {
 		replace: true,
 		name: 'heart1',
 		position: new THREE.Vector3(0, -5, 1),
-		scale: new THREE.Vector3(1, 1, 1),
+		scale: new THREE.Vector3(0,0,0),
 		container: interactable,
 	})
 	heart1.init()
@@ -220,7 +242,25 @@ function instances() {
 		container: interactable,
 	})
 	bottle.init()
+
+	const door = new Model({
+		//4 mandatories
+		mixers: mixers,
+		url: '/door.glb',
+		animationState: true,
+		scene: scene,
+		meshes: meshes,
+		replace: true,
+		name: 'mydoor',
+		position: new THREE.Vector3(0, -7, 6),
+		scale: new THREE.Vector3(6,6,6),
+		container: interactable,
+	})
+	door.init()
 }
+
+
+
 
 
 
@@ -245,15 +285,51 @@ function raycast() {
 				controls.enabled = true
 			}
 
+			if (clickedObject == 'Door_1') {
+				scene.remove(meshes.mydoor)
+				gsap.to(meshes.mygirl.scale, {
+					duration: 0.5,
+					x: 15,
+					y: 15,
+					z: 15,
+				});
+				gsap.to(meshes.heart1.scale, {
+					duration: 0.5,
+					x: 1,
+					y: 1,
+					z: 1,
+					ease: 'power3.inOut',
+				});
+
+				gsap.to(meshes.heart1.scale, {
+					duration: 0.5,
+					x: 1,
+					y: 1,
+					z: 1
+				});
+				gsap.to(meshes.heart1.scale, {
+					duration: 0.5,
+					x: 1,
+					y: 1,
+					z: 1
+				});
+				gsap.to(meshes.heart1.scale, {
+					duration: 0.5,
+					x: 1,
+					y: 1,
+					z: 1
+				});
+			}
+
 
 
 
 			if (clickedObject == 'Bow__0') {
 				gsap.to(meshes.mybear.scale, {
 					duration: 0.5,
-					x: 1.5,
-					y: 1.5,
-					z: 1.5
+					x: 1.2,
+					y: 1.2,
+					z: 1.2
 				});
 			}
 			if (clickedObject == 'Crystal_Heart_Crystal_Heart_Mat_0') {
@@ -359,10 +435,11 @@ function animate() {
 
 	const tick = clock.getElapsedTime()
 
-	controls.update()
+	// controls.update()
 
 
 	meshes.magicCircle.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), 0.002);
+	meshes.coverdrop1.scale.y +=0.01;
 
 	if (meshes.mybow) {
 		meshes.mybow.position.y = Math.sin(tick * 3) * 0.2 + 4;
@@ -377,12 +454,9 @@ function animate() {
 
 
 
-	if (meshes.girl) {
+	if (meshes.mygirl) {
 		//meshes.girl.rotation.set(0, Math.PI, 0);
-		meshes.girl.scale.x = Math.sin(tick * 3) * 0.03 + 15;
-		meshes.girl.scale.y = Math.sin(tick * 3) * 0.03 + 15;
-		meshes.girl.scale.z = Math.sin(tick * 3) * 0.03 + 15;
-		meshes.girl.position.y = Math.sin(tick * 3) * 0.1 - 18.5;
+		meshes.mygirl.position.y = Math.sin(tick * 3) * 0.1 - 18.5;
 
 	}
 
@@ -433,7 +507,7 @@ function loader() {
 				loader.style.display = 'none'
 			},
 		})
-		controls.enabled = true
+		// controls.enabled = true
 	})
 	gsap.to(enter, {
 		opacity: 1,
