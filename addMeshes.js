@@ -41,7 +41,7 @@ export const background = () => {
 	const background = new PlaneGeometry(100, 100)
 	const backgroundMaterial = new MeshBasicMaterial({ color:0xD8BFD8 })
 	const plane = new Mesh(background, backgroundMaterial)
-	plane.position.set(0, 0, -5)
+	plane.position.set(0, 0, -100)
 	// boxMesh.userData.name = 'target1'
 	return plane
 }
@@ -123,7 +123,7 @@ export const magicCircle = () => {
 		transparent: true
 	})
 	const magicCircle = new Mesh(circle, circleMaterial)
-	magicCircle.position.set(0, 0, 0)
+	magicCircle.position.set(0, 0, -7)
 	// boxMesh.userData.name = 'target1'
 	return magicCircle
 }
