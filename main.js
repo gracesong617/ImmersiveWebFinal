@@ -1,12 +1,11 @@
 import './style.css'
 import * as THREE from 'three'
-import { addBoilerPlateMeshes, addStandardMesh } from './addMeshes'
-import { addLight } from './addLights'
+import { addLight, addLight1, addLight2, addLightback } from './addLights'
 import { background, magicCircle, cover, button, girlcover, coverdrop, coverdrop1 } from './addMeshes'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Model from './Model'
 import gsap from 'gsap'
-
+import { post } from './post'
 import { DragControls } from 'three/addons/controls/DragControls.js';
 
 
@@ -18,19 +17,24 @@ const renderer = new THREE.WebGLRenderer({ antialias: true })
 // 	100
 // )
 
-var width = window.innerWidth; //窗口宽度
-var height = window.innerHeight; //窗口高度
-var k = width / height; //窗口宽高比
-var s = 8; //三维场景显示范围控制系数，系数越大，显示的范围越大
-//创建相机对象
+var width = window.innerWidth; 
+var height = window.innerHeight;
+var k = width / height;
+var s = 8;
+
 const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
 
-
+const textElement = document.querySelector('.info');
+const textElement1 = document.querySelector('.info1');
+const textElement2 = document.querySelector('.info2');
+const textElement3 = document.querySelector('.info3');
+const textElement4 = document.querySelector('.info4');
 
 
 const scene = new THREE.Scene()
 const meshes = {}
 const lights = {}
+const composer = post(scene, camera, renderer)
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 //pointer.x or pointer.y
@@ -41,28 +45,23 @@ const dragObjects = [
 ]
 
 const controls = new OrbitControls(camera, renderer.domElement)
-
 controls.enableDamping = true
 controls.dampingFactor = 0.08
 controls.enablePan = false
 controls.enableZoom = true
 controls.maxZoom = 2;
 controls.minZoom = 1;
-controls.minAzimuthAngle = -10 * Math.PI / 180; // 设置最小水平旋转角度为 -30 度
+controls.minAzimuthAngle = -10 * Math.PI / 180;
 controls.maxAzimuthAngle = 10 * Math.PI / 180;
-controls.minPolarAngle = 80 * Math.PI / 180; // 设置最小垂直选择角度
-controls.maxPolarAngle = 90 * Math.PI / 180;
+controls.minPolarAngle = 70 * Math.PI / 180; 
+controls.maxPolarAngle = 95 * Math.PI / 180;
+
 const clock = new THREE.Clock()
-
-
-
 
 
 const interactable = []
 const modelCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 modelCamera.position.z = 5;
-
-
 
 
 
@@ -72,9 +71,6 @@ function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight)
 	document.body.appendChild(renderer.domElement)
 
-	meshes.default = addBoilerPlateMeshes()
-	meshes.standard = addStandardMesh()
-
 	meshes.background = background()
 	meshes.magicCircle = magicCircle()
 	meshes.cover = cover()
@@ -82,15 +78,23 @@ function init() {
 	meshes.girlcover = girlcover()
 	meshes.coverdrop = coverdrop()
 	meshes.coverdrop1 = coverdrop1()
+	//meshes.text = text()
 
 	lights.default = addLight()
+	lights.add = addLight1()
+	lights.add2 = addLight2()
+	lights.addback = addLightback()
 
 	scene.add(lights.default)
-	// scene.add(meshes.standard)
-	// scene.add(meshes.default)
+	scene.add(lights.add)
+	scene.add(lights.add2)
+	scene.add(lights.addback)
+
+
 
 	scene.add(meshes.background)
 	scene.add(meshes.magicCircle)
+	//scene.add(meshes.text)
 
 
 	scene.add(meshes.cover)
@@ -121,7 +125,7 @@ function instances() {
 		meshes: meshes,
 		name: 'mygirl',
 		position: new THREE.Vector3(0, -10.5, 2.5),
-		scale: new THREE.Vector3(0,0,0),
+		scale: new THREE.Vector3(0, 0, 0),
 		mixers: mixers,
 		//replace: true,
 		animationState: true,
@@ -139,8 +143,8 @@ function instances() {
 		scene: scene,
 		meshes: meshes,
 		name: 'mybear',
-		position: new THREE.Vector3(-10, -10,1),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(-10, -10, 1),
+		scale: new THREE.Vector3(0, 0, 0),
 		mixers: mixers,
 		replace: true,
 		animationState: true,
@@ -158,8 +162,8 @@ function instances() {
 		meshes: meshes,
 		replace: true,
 		name: 'myheart',
-		position: new THREE.Vector3(-10, -6, 1),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(-8, -6, 1),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	heart.init()
@@ -171,7 +175,7 @@ function instances() {
 		meshes: meshes,
 		name: 'mybow',
 		position: new THREE.Vector3(9.5, 1, 1),
-		scale: new THREE.Vector3(0,0,0),
+		scale: new THREE.Vector3(0, 0, 0),
 		mixers: mixers,
 		replace: true,
 		animationState: true,
@@ -243,8 +247,8 @@ function instances() {
 		meshes: meshes,
 		replace: true,
 		name: 'mybottle',
-		position: new THREE.Vector3(8, -4, 5),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(8, -4, 0),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	bottle.init()
@@ -258,8 +262,8 @@ function instances() {
 		meshes: meshes,
 		replace: true,
 		name: 'mycake',
-		position: new THREE.Vector3(12, -2, 5),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(12, -2, 0),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	cake.init()
@@ -273,8 +277,8 @@ function instances() {
 		meshes: meshes,
 		replace: true,
 		name: 'mydoor',
-		position: new THREE.Vector3(-7, -7, 6),
-		scale: new THREE.Vector3(6,6,6),
+		position: new THREE.Vector3(-7, -6, 6),
+		scale: new THREE.Vector3(6, 6, 6),
 		container: interactable,
 	})
 	door.init()
@@ -350,7 +354,7 @@ function instances() {
 		replace: true,
 		name: 'mybook',
 		position: new THREE.Vector3(-12, 0, 0),
-		scale: new THREE.Vector3(0.01,0.01,0.01),
+		scale: new THREE.Vector3(0.01, 0.01, 0.01),
 		container: interactable,
 	})
 	book.init()
@@ -365,7 +369,7 @@ function instances() {
 		//replace: true,
 		name: 'myhat',
 		position: new THREE.Vector3(0, 40, 4),
-		scale: new THREE.Vector3(0,0,0),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	hat.init()
@@ -380,8 +384,8 @@ function instances() {
 		meshes: meshes,
 		//replace: true,
 		name: 'myrainbow',
-		position: new THREE.Vector3(0,-7.6,-5),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(0, -7.6, -5),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	rainbow.init()
@@ -395,8 +399,8 @@ function instances() {
 		meshes: meshes,
 		//replace: true,
 		name: 'mybg',
-		position: new THREE.Vector3(0,-7.6,3),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(0, -7.6, 3),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	bg.init()
@@ -425,8 +429,8 @@ function instances() {
 		meshes: meshes,
 		replace: true,
 		name: 'mystar',
-		position: new THREE.Vector3(-2,3.2,-20),
-		scale: new THREE.Vector3(0,0,0),
+		position: new THREE.Vector3(-2, 3.2, -20),
+		scale: new THREE.Vector3(0, 0, 0),
 		container: interactable,
 	})
 	star.init()
@@ -434,7 +438,9 @@ function instances() {
 }
 
 
-
+function onClickObjcet() {
+	saveScreenshot()
+}
 
 
 
@@ -461,6 +467,11 @@ function raycast() {
 
 			if (clickedObject == 'Door_1') {
 				scene.remove(meshes.mydoor)
+				textElement.style.display = 'block';
+				textElement1.style.display = 'block';
+				textElement2.style.display = 'block';
+				textElement3.style.display = 'block';
+				textElement4.style.display = 'block';
 				gsap.to(meshes.mygirl.scale, {
 					x: 15,
 					y: 15,
@@ -516,6 +527,16 @@ function raycast() {
 
 
 			if (clickedObject == 'Bow__0') {
+				gsap.to(composer.bloom, {
+					strength: 1.3,
+					duration: 2,
+					onComplete: () => {
+						gsap.to(composer.bloom, {
+							strength: 0.3,
+							duration: 2,
+						})
+					},
+				})
 				gsap.to(meshes.mybg.scale, {
 					duration: 0.5,
 					x: 0,
@@ -625,11 +646,12 @@ function raycast() {
 					y: 0,
 					z: 0,
 				});
-				
-		
+
+
 			}
 
 			if (clickedObject == '円柱007_1') {
+
 				gsap.to(meshes.myhat.scale, {
 					duration: 0.5,
 					x: 0,
@@ -679,8 +701,9 @@ function raycast() {
 					z: 10,
 				});
 			}
-
+			//cake
 			if (clickedObject == 'TorusKnot004_4') {
+				
 				gsap.to(meshes.myhat.scale, {
 					duration: 0.5,
 					x: 0,
@@ -730,7 +753,7 @@ function raycast() {
 					z: 10,
 				});
 
-				
+
 			}
 
 			if (clickedObject == 'kami') {
@@ -866,7 +889,7 @@ function animate() {
 	}
 	if (meshes.mybear) {
 		meshes.mybear.position.y = Math.sin(tick * 3) * 0.2 + 5;
-		meshes.mybear.rotation.set( 15* Math.PI / 180,0,0)
+		meshes.mybear.rotation.set(15 * Math.PI / 180, 0, 0)
 
 	}
 
@@ -919,13 +942,13 @@ function animate() {
 	if (meshes.mycake) {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mycake.rotation.set(15 * Math.PI / 180, 0, 0)
-		meshes.mycake.position.y = Math.sin(tick * 2) * 0.3 -2;
+		meshes.mycake.position.y = Math.sin(tick * 2) * 0.3 - 2;
 	}
 
 	if (meshes.mybook) {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mybook.rotation.set(0, 180 * Math.PI / 180, 60 * Math.PI / 180)
-		meshes.mybook.position.y = Math.sin(tick * 3) * 0.2 ;
+		meshes.mybook.position.y = Math.sin(tick * 3) * 0.2;
 	}
 
 	if (meshes.myhat) {
@@ -936,59 +959,28 @@ function animate() {
 
 	if (meshes.mydoor) {
 		//meshes.button.rotation.y -= 0.01;
-		meshes.mydoor.rotation.set(0, 5 * Math.PI / 180,0)
+		meshes.mydoor.rotation.set(0, 5 * Math.PI / 180, 0)
 		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
 	}
 
 	if (meshes.mybg) {
 		//meshes.button.rotation.y -= 0.01;
-		meshes.mybg.rotation.set( 20* Math.PI / 180,0,0)
+		meshes.mybg.rotation.set(20 * Math.PI / 180, 0, 0)
 		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
 	}
-	
+
 	if (meshes.mymap) {
 		//meshes.button.rotation.y -= 0.01;
-		meshes.mymap.rotation.set( 1* Math.PI / 180,20* Math.PI / 180,0)
+		meshes.mymap.rotation.set(1 * Math.PI / 180, 20 * Math.PI / 180, 0)
 		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
 	}
 
 	if (meshes.mystar) {
 		//meshes.button.rotation.y -= 0.01;
-		meshes.mystar.rotation.set( 60* Math.PI / 180,0,0)
+		meshes.mystar.rotation.set(60 * Math.PI / 180, 0, 0)
 		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
 	}
-	
-	
-	
-	
 
-
-
-
-	meshes.default.rotation.x += 0.01
-	meshes.default.rotation.y -= 0.01
-	meshes.standard.rotation.x -= 0.01
-	meshes.standard.rotation.z -= 0.01
 
 	renderer.render(scene, camera)
-}
-
-function loader() {
-	const enter = document.querySelector('.enterButton')
-	const loader = document.querySelector('.loader')
-	enter.addEventListener('click', () => {
-		gsap.to(loader, {
-			autoAlpha: 0,
-			duration: 5,
-			onComplete: () => {
-				loader.style.display = 'none'
-			},
-		})
-		// controls.enabled = true
-	})
-	gsap.to(enter, {
-		opacity: 1,
-		duration: 4,
-		delay: 2.0,
-	})
 }

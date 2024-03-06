@@ -18,25 +18,77 @@ import {
 	PlaneGeometry,
 	LinearMipmapLinearFilter,
 	WebGLRenderer,
-	CapsuleGeometry 
+	CapsuleGeometry,
+	MeshMatcapMaterial 
+
 } from 'three'
+
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
 const renderer = new WebGLRenderer();
 const loader = new TextureLoader()
+const textloader = new FontLoader();
 loader.generateMipmaps = true;
 loader.minFilter = LinearMipmapLinearFilter;
 loader.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-export const addBoilerPlateMeshes = () => {
-	const box = new BoxGeometry(1, 1, 1)
-	const boxMaterial = new MeshBasicMaterial({ color: 0xff0000 })
-	const boxMesh = new Mesh(box, boxMaterial)
-	boxMesh.userData.name = 'target1'
-	boxMesh.name = 'target1'
-	boxMesh.position.set(-2, 0, 5)
-	return boxMesh
-}
 
+// export const text = () => {
+//     return new Promise((resolve, reject) => {
+//         textloader.load(
+// 			'fonts/helvetiker_bold.typeface.json', 
+// 			function (font) {
+//             const textGeometry = new TextGeometry(
+// 				'Hello three.js!', 
+// 				{
+//                 font: font,
+//                 size: 80,
+//                 height: 5,
+//                 curveSegments: 12,
+//                 bevelEnabled: true,
+//                 bevelThickness: 10,
+//                 bevelSize: 8,
+//                 bevelOffset: 0,
+//                 bevelSegments: 5
+//             });
+// 			const textMaterial = new MeshMatcapMaterial({
+// 				matcap: loader.load('matcap1.png'),
+// 			})
+// 			resolve({ geometry: textGeometry, material: textMaterial });
+//         }, undefined, reject);
+//     });
+//};
+// export const flowerModel = () => {
+// 	return new Promise((resolve, reject) => {
+// 		//using model loader we're going to async load a 3D model from our path
+// 		modelLoader.load(
+// 			'bouquet.glb',
+// 			//this function below is called if our modle is loaded correctly
+// 			(gltf) => {
+// 				const modelMixer = new AnimationMixer(gltf.scene)
+// 				const newMaterial = new MeshMatcapMaterial({
+// 					matcap: tLoader.load('matcap1.png'),
+// 				})
+// 				gltf.scene.traverse((child) =>{
+// 					if(child.isMesh){
+// 						child.material = newMaterial
+// 					}
+// 				})
+// 				gltf.animations.forEach((clip) => {
+// 					modelMixer.clipAction(clip).play()
+// 				})
+// 				resolve({ scene: gltf.scene, mixer: modelMixer })
+// 			}, 
+// 			undefined, 
+// 			(error) => {
+// 				console.error(error)
+// 				reject(error)
+// 			}
+
+// 		)
+// 	})
+// }
 export const background = () => {
 	const background = new PlaneGeometry(100, 100)
 	const backgroundMaterial = new MeshBasicMaterial({ color:0xD8BFD8 })
@@ -128,12 +180,3 @@ export const magicCircle = () => {
 	return magicCircle
 }
 
-export const addStandardMesh = () => {
-	const box = new BoxGeometry(1, 1, 1)
-	const boxMaterial = new MeshStandardMaterial({ color: 0x00ff00 })
-	const boxMesh = new Mesh(box, boxMaterial)
-	boxMesh.userData.name = 'target2'
-	boxMesh.name = 'target2'
-	boxMesh.position.set(2, 0, 5)
-	return boxMesh
-}
