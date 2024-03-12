@@ -42,6 +42,7 @@ export default class Model {
 		this.position = obj.position || new Vector3(0, 0, 0)
 		this.visible = obj.visible
 	}
+
 	init() {
 		this.loader.load(this.file, (gltf) => {
 			this.mesh = gltf.scene.children[0]

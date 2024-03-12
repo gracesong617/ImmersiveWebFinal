@@ -19,7 +19,8 @@ import {
 	LinearMipmapLinearFilter,
 	WebGLRenderer,
 	CapsuleGeometry,
-	MeshMatcapMaterial 
+	MeshMatcapMaterial,
+	TetrahedronGeometry
 
 } from 'three'
 
@@ -28,67 +29,55 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
 const renderer = new WebGLRenderer();
 const loader = new TextureLoader()
-const textloader = new FontLoader();
+
 loader.generateMipmaps = true;
 loader.minFilter = LinearMipmapLinearFilter;
 loader.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
 
-// export const text = () => {
-//     return new Promise((resolve, reject) => {
-//         textloader.load(
-// 			'fonts/helvetiker_bold.typeface.json', 
-// 			function (font) {
-//             const textGeometry = new TextGeometry(
-// 				'Hello three.js!', 
-// 				{
-//                 font: font,
-//                 size: 80,
-//                 height: 5,
-//                 curveSegments: 12,
-//                 bevelEnabled: true,
-//                 bevelThickness: 10,
-//                 bevelSize: 8,
-//                 bevelOffset: 0,
-//                 bevelSegments: 5
-//             });
-// 			const textMaterial = new MeshMatcapMaterial({
-// 				matcap: loader.load('matcap1.png'),
-// 			})
-// 			resolve({ geometry: textGeometry, material: textMaterial });
-//         }, undefined, reject);
-//     });
-//};
-// export const flowerModel = () => {
-// 	return new Promise((resolve, reject) => {
-// 		//using model loader we're going to async load a 3D model from our path
-// 		modelLoader.load(
-// 			'bouquet.glb',
-// 			//this function below is called if our modle is loaded correctly
-// 			(gltf) => {
-// 				const modelMixer = new AnimationMixer(gltf.scene)
-// 				const newMaterial = new MeshMatcapMaterial({
-// 					matcap: tLoader.load('matcap1.png'),
-// 				})
-// 				gltf.scene.traverse((child) =>{
-// 					if(child.isMesh){
-// 						child.material = newMaterial
-// 					}
-// 				})
-// 				gltf.animations.forEach((clip) => {
-// 					modelMixer.clipAction(clip).play()
-// 				})
-// 				resolve({ scene: gltf.scene, mixer: modelMixer })
-// 			}, 
-// 			undefined, 
-// 			(error) => {
-// 				console.error(error)
-// 				reject(error)
-// 			}
+export const background1 = () => {
+	const color = loader.load('next.png')
+	const background1 = new PlaneGeometry(2,2)
+	const background1Material = new MeshBasicMaterial({
+		map:color,
+	    transparent: true,  })
+	const plane1 = new Mesh(background1, background1Material)
+	plane1.position.set(-6, 0, 1)
+	plane1.scale.set(0,0,0)
+	plane1.name = 'playernext'
 
-// 		)
-// 	})
-// }
+	return plane1
+}
+//stop
+export const background2 = () => {
+	const color = loader.load('stop.png')
+	const background1 = new PlaneGeometry(1.2,1.2)
+	const background1Material = new MeshBasicMaterial({
+		map:color,
+	    transparent: true,  })
+	const plane1 = new Mesh(background1, background1Material)
+	plane1.position.set(5, 0, 1)
+	plane1.scale.set(0,0,0)
+	plane1.name = 'playerstop'
+
+	return plane1
+}
+//replay
+export const background3 = () => {
+	const color = loader.load('play.png')
+	const background1 = new PlaneGeometry(1.2,1.2)
+	const background1Material = new MeshBasicMaterial({
+		map:color,
+	    transparent: true,  })
+	const plane1 = new Mesh(background1, background1Material)
+	plane1.position.set(7, 0, 1)
+	plane1.scale.set(0,0,0)
+	plane1.name = 'playerreplay'
+
+	return plane1
+}
+
+
 export const background = () => {
 	const background = new PlaneGeometry(100, 100)
 	const backgroundMaterial = new MeshBasicMaterial({ color:0xD8BFD8 })
@@ -109,26 +98,6 @@ export const cover = () => {
 	return cover
 }
 
-export const coverdrop = () => {
-	const coverdropgeo = new CircleGeometry(25,32,10,2.5)
-	const coverdropMaterial = new MeshBasicMaterial({ color:0x9FC5E8  })
-	const coverdrop = new Mesh(coverdropgeo, coverdropMaterial)
-	coverdrop.position.set(-2, 26.5, 10)
-	// boxMesh.userData.name = 'target1'
-	return coverdrop
-}
-
-export const coverdrop1 = () => {
-	const coverdropgeo1 = new ConeGeometry(0.7,1,4,8)
-	const coverdropMaterial1 = new MeshBasicMaterial({ color:0x9FC5E8  })
-	const coverdrop1 = new Mesh(coverdropgeo1, coverdropMaterial1)
-	coverdrop1.position.set(-8,4, 10)
-	coverdrop1.rotation.set(0, 0, 1);
-	// boxMesh.userData.name = 'target1'
-	return coverdrop1
-}
-
-
 
 
 
@@ -139,7 +108,6 @@ export const button = () => {
 		//color:0x9FC5E8 
 		map:color,
 	    transparent: true,
-
 	})//blue
 	const button = new Mesh(buttongeo, buttonMaterial)
 	button.position.set(0, 0, 15)
@@ -157,12 +125,11 @@ export const girlcover = () => {
 		map:color,
 	    transparent: true,
 
-	})//blue
+	})
 	const girlcover = new Mesh(girlgeo, girlMaterial)
 	girlcover.position.set(0, 0, 14)
 	girlcover.scale.set(1, 1, 1)
 	girlcover.name = 'girlcover'
-	// boxMesh.userData.name = 'target1'
 	return girlcover
 }
 

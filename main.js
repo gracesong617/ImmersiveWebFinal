@@ -1,7 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
 import { addLight, addLight1, addLight2, addLightback } from './addLights'
-import { background, magicCircle, cover, button, girlcover, coverdrop, coverdrop1 } from './addMeshes'
+import { background, magicCircle, cover, button, girlcover,background1,background2,background3 } from './addMeshes'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Model from './Model'
 import gsap from 'gsap'
@@ -10,14 +10,8 @@ import { DragControls } from 'three/addons/controls/DragControls.js';
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
-// const camera = new THREE.PerspectiveCamera(
-// 	75,
-// 	window.innerWidth / window.innerHeight,
-// 	0.1,
-// 	100
-// )
 
-var width = window.innerWidth; 
+var width = window.innerWidth;
 var height = window.innerHeight;
 var k = width / height;
 var s = 8;
@@ -31,6 +25,14 @@ const textElement3 = document.querySelector('.info3');
 const textElement4 = document.querySelector('.info4');
 
 
+const tloader = new THREE.TextureLoader()
+const texture = tloader.load('matcap13.png')
+const texture1 = tloader.load('matcap21.png')
+const texture2 = tloader.load('matcap31.png')
+const texture3 = tloader.load('matcap31.png')
+const texture4 = tloader.load('matcap31.png')
+
+
 const scene = new THREE.Scene()
 const meshes = {}
 const lights = {}
@@ -39,10 +41,70 @@ const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 //pointer.x or pointer.y
 const mixers = []
-const dragObjects = [
-	meshes.mybow
 
-]
+const listener = new THREE.AudioListener()
+camera.add(listener)
+
+const sound1 = new THREE.Audio(listener)
+const sound2 = new THREE.Audio(listener)
+const sound3 = new THREE.Audio(listener)
+const audioLoader = new THREE.AudioLoader()
+
+audioLoader.load('/music1.mp3', function (buffer) {
+	sound1.setBuffer(buffer)
+	sound1.setVolume(0.3);
+})
+
+audioLoader.load('/music2.m4a', function (buffer) {
+	sound2.setBuffer(buffer)
+	sound2.setVolume(0.1);
+})
+
+audioLoader.load('/music3.mp3', function (buffer) {
+	sound3.setBuffer(buffer)
+	sound3.setVolume(0.1);
+})
+
+
+const songs = [sound1, sound2, sound3]
+var currentSongIndex = 0;
+var isPlaying = false;
+
+let volume1 = 0.3;
+let volume2 = 0.1
+let volume3 = 0.1
+const volumeStep = 0.05;
+
+window.addEventListener('wheel', function (event) {
+	const currentSound = songs[currentSongIndex];
+	if (currentSound === sound1) {
+		if (event.deltaY < 0) {
+			volume1 = Math.min(1, volume1 + volumeStep);
+		} else {
+			volume1 = Math.max(0.3, volume1 - volumeStep);
+		}
+		sound1.setVolume(volume1)
+	}
+	if (currentSound === sound2) {
+		if (event.deltaY < 0) {
+			volume2 = Math.min(0.6, volume2 + volumeStep);
+		} else {
+			volume2 = Math.max(0.1, volume2 - volumeStep);
+		}
+		sound2.setVolume(volume2)
+	}
+	if (currentSound === sound3) {
+		if (event.deltaY < 0) {
+			volume3 = Math.min(0.6, volume3 + volumeStep);
+		} else {
+			volume3 = Math.max(0.1, volume3 - volumeStep);
+		}
+		sound3.setVolume(volume3)
+	}
+});
+
+
+
 
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
@@ -53,13 +115,15 @@ controls.maxZoom = 2;
 controls.minZoom = 1;
 controls.minAzimuthAngle = -10 * Math.PI / 180;
 controls.maxAzimuthAngle = 10 * Math.PI / 180;
-controls.minPolarAngle = 70 * Math.PI / 180; 
+controls.minPolarAngle = 70 * Math.PI / 180;
 controls.maxPolarAngle = 95 * Math.PI / 180;
 
 const clock = new THREE.Clock()
 
 
 const interactable = []
+const dragObjects = []
+
 const modelCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 modelCamera.position.z = 5;
 
@@ -76,9 +140,12 @@ function init() {
 	meshes.cover = cover()
 	meshes.button = button()
 	meshes.girlcover = girlcover()
-	meshes.coverdrop = coverdrop()
-	meshes.coverdrop1 = coverdrop1()
-	//meshes.text = text()
+
+	meshes.background1 = background1()
+	meshes.background2 = background2()
+	meshes.background3 = background3()
+	
+
 
 	lights.default = addLight()
 	lights.add = addLight1()
@@ -89,19 +156,18 @@ function init() {
 	scene.add(lights.add)
 	scene.add(lights.add2)
 	scene.add(lights.addback)
-
-
+	scene.add(sound1)
 
 	scene.add(meshes.background)
 	scene.add(meshes.magicCircle)
-	//scene.add(meshes.text)
 
 
 	scene.add(meshes.cover)
 	scene.add(meshes.button)
 	scene.add(meshes.girlcover)
-	// scene.add(meshes.coverdrop)
-	// scene.add(meshes.coverdrop1)
+	scene.add(meshes.background1)
+	scene.add(meshes.background2)
+	scene.add(meshes.background3)
 
 
 	camera.position.set(0, 0, 200); //设置相机位置
@@ -111,6 +177,7 @@ function init() {
 	instances()
 	resize()
 	animate()
+
 
 }
 
@@ -125,7 +192,7 @@ function instances() {
 		meshes: meshes,
 		name: 'mygirl',
 		position: new THREE.Vector3(0, -10.5, 2.5),
-		scale: new THREE.Vector3(0, 0, 0),
+		scale: new THREE.Vector3(0.01, 0.01, 0.01),
 		mixers: mixers,
 		//replace: true,
 		animationState: true,
@@ -144,11 +211,11 @@ function instances() {
 		meshes: meshes,
 		name: 'mybear',
 		position: new THREE.Vector3(-10, -10, 1),
-		scale: new THREE.Vector3(0, 0, 0),
+		scale: new THREE.Vector3(0.001, 0.001, 0.001),
 		mixers: mixers,
 		replace: true,
 		animationState: true,
-		container: interactable,
+		container: dragObjects,
 
 	})
 	bear.init()
@@ -163,8 +230,8 @@ function instances() {
 		replace: true,
 		name: 'myheart',
 		position: new THREE.Vector3(-8, -6, 1),
-		scale: new THREE.Vector3(0, 0, 0),
-		container: interactable,
+		scale: new THREE.Vector3(0.001, 0.001, 0.001),
+		container: dragObjects,
 	})
 	heart.init()
 
@@ -175,11 +242,11 @@ function instances() {
 		meshes: meshes,
 		name: 'mybow',
 		position: new THREE.Vector3(9.5, 1, 1),
-		scale: new THREE.Vector3(0, 0, 0),
+		scale: new THREE.Vector3(0.001, 0.001, 0.001),
 		mixers: mixers,
-		replace: true,
+		replace: texture1,
 		animationState: true,
-		container: interactable,
+		container: dragObjects,
 		class: 'bow',
 
 	})
@@ -196,8 +263,8 @@ function instances() {
 		replace: true,
 		name: 'heart1',
 		position: new THREE.Vector3(0, -5, 1),
-		scale: new THREE.Vector3(0, 0, 0),
-		container: interactable,
+		scale: new THREE.Vector3(0.001, 0.001, 0.001),
+		container: dragObjects,
 	})
 	heart1.init()
 
@@ -249,7 +316,7 @@ function instances() {
 		name: 'mybottle',
 		position: new THREE.Vector3(8, -4, 0),
 		scale: new THREE.Vector3(0, 0, 0),
-		container: interactable,
+		container: dragObjects,
 	})
 	bottle.init()
 
@@ -264,7 +331,7 @@ function instances() {
 		name: 'mycake',
 		position: new THREE.Vector3(12, -2, 0),
 		scale: new THREE.Vector3(0, 0, 0),
-		container: interactable,
+		container: dragObjects,
 	})
 	cake.init()
 
@@ -279,7 +346,7 @@ function instances() {
 		name: 'mydoor',
 		position: new THREE.Vector3(-7, -6, 6),
 		scale: new THREE.Vector3(6, 6, 6),
-		container: interactable,
+		container: dragObjects,
 	})
 	door.init()
 
@@ -355,7 +422,8 @@ function instances() {
 		name: 'mybook',
 		position: new THREE.Vector3(-12, 0, 0),
 		scale: new THREE.Vector3(0.01, 0.01, 0.01),
-		container: interactable,
+		container: dragObjects,
+
 	})
 	book.init()
 
@@ -405,20 +473,7 @@ function instances() {
 	})
 	bg.init()
 
-	// const map = new Model({
-	// 	//4 mandatories
-	// 	mixers: mixers,
-	// 	url: '/red.glb',
-	// 	animationState: true,
-	// 	scene: scene,
-	// 	meshes: meshes,
-	// 	//replace: true,
-	// 	name: 'mymap',
-	// 	position: new THREE.Vector3(0,-7.6,-15),
-	// 	scale: new THREE.Vector3(2,1.7,1.7),
-	// 	container: interactable,
-	// })
-	// map.init()
+
 
 	const star = new Model({
 		//4 mandatories
@@ -427,7 +482,7 @@ function instances() {
 		animationState: true,
 		scene: scene,
 		meshes: meshes,
-		replace: true,
+		replace: texture2,
 		name: 'mystar',
 		position: new THREE.Vector3(-2, 3.2, -20),
 		scale: new THREE.Vector3(0, 0, 0),
@@ -438,21 +493,76 @@ function instances() {
 }
 
 
-function onClickObjcet() {
-	saveScreenshot()
-}
 
 
 
 function raycast() {
+	window.addEventListener('mousemove', (event) => {
+		pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+		pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+		raycaster.setFromCamera(pointer, camera)
+
+		const intersects = raycaster.intersectObjects(scene.children)
+		const interactabledObject = intersects[0].object.name;
+
+
+		if (interactabledObject == 'Door_1'
+			|| interactabledObject == 'Door_2'
+			|| interactabledObject == 'button'
+			|| interactabledObject == 'Bow__0'
+			|| interactabledObject == 'Crystal_Heart_Crystal_Heart_Mat_0'
+			|| interactabledObject == 'can_low'
+			|| interactabledObject == '立方体002'
+			|| interactabledObject == '立方体002_1'
+			|| interactabledObject == '円柱007_1'
+			|| interactabledObject == '円柱007'
+			|| interactabledObject == 'Cap'
+			|| interactabledObject == 'TorusKnot004_4'
+			|| interactabledObject == 'kami'
+			|| interactabledObject == 'playernext'
+			|| interactabledObject == 'playerstop'
+			|| interactabledObject == 'playerreplay'
+		) {
+			document.body.style.cursor = 'url("cursor3.png"), pointer'
+		} else {
+			document.body.style.cursor = 'url("cursor.png"),auto'
+		}
+
+
+	})
+
+
+
+
 	window.addEventListener('click', (event) => {
 		pointer.x = (event.clientX / window.innerWidth) * 2 - 1
 		pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
 		raycaster.setFromCamera(pointer, camera)
+
 		const intersects = raycaster.intersectObjects(scene.children)
+
 		for (let i = 0; i < intersects.length; i++) {
+
 			const clickedObject = intersects[i].object.name;
 			console.log('Clicked object:', intersects[i].object.name);
+
+			if (clickedObject == 'playernext') {
+				songs[currentSongIndex].stop();
+				currentSongIndex = (currentSongIndex + 1) % songs.length;
+				songs[currentSongIndex].play();
+	
+			}
+
+			if (clickedObject == 'playerstop') {
+				songs[currentSongIndex].pause();
+		
+			}
+
+			if (clickedObject == 'playerreplay') {
+				songs[currentSongIndex].play();
+
+			}
+
 			if (clickedObject == 'button') {
 				meshes.cover.visible = false;
 				meshes.button.visible = false
@@ -460,8 +570,10 @@ function raycast() {
 				scene.remove(meshes.cover)
 				scene.remove(meshes.button)
 				scene.remove(meshes.girlcover)
-				const audio = document.querySelector('.introAudio')
-				audio.play()
+				// const audio = document.querySelector('.introAudio')
+				// audio.play()
+				sound1.play()
+
 				controls.enabled = true
 			}
 
@@ -472,7 +584,26 @@ function raycast() {
 				textElement2.style.display = 'block';
 				textElement3.style.display = 'block';
 				textElement4.style.display = 'block';
+				gsap.to(meshes.background1.scale, {
+					duration: 1,
+					x: 1,
+					y: 1,
+					z: 1,
+				});
+					gsap.to(meshes.background2.scale, {
+					duration: 1,
+					x: 1,
+					y: 1,
+					z: 1,
+				});
+					gsap.to(meshes.background3.scale, {
+					duration: 1,
+					x: 1,
+					y: 1,
+					z: 1,
+				});
 				gsap.to(meshes.mygirl.scale, {
+					duration: 0.1,
 					x: 15,
 					y: 15,
 					z: 15,
@@ -482,7 +613,6 @@ function raycast() {
 					x: 1,
 					y: 1,
 					z: 1,
-					ease: 'power3.inOut',
 				});
 
 				gsap.to(meshes.myheart.scale, {
@@ -527,16 +657,11 @@ function raycast() {
 
 
 			if (clickedObject == 'Bow__0') {
-				gsap.to(composer.bloom, {
-					strength: 1.3,
-					duration: 2,
-					onComplete: () => {
-						gsap.to(composer.bloom, {
-							strength: 0.3,
-							duration: 2,
-						})
-					},
-				})
+
+				intersects[i].object.material.matcap = texture;
+				intersects[i].object.material.needsUpdate = true
+
+
 				gsap.to(meshes.mybg.scale, {
 					duration: 0.5,
 					x: 0,
@@ -556,7 +681,10 @@ function raycast() {
 					z: 4
 				});
 			}
+
 			if (clickedObject == 'Crystal_Heart_Crystal_Heart_Mat_0') {
+				intersects[i].object.material.matcap = texture;
+				intersects[i].object.material.needsUpdate = true
 				gsap.to(meshes.mystar.scale, {
 					duration: 0.5,
 					x: 0,
@@ -578,6 +706,7 @@ function raycast() {
 			}
 
 			if (clickedObject == 'can_low') {
+
 
 				gsap.to(meshes.mystar.scale, {
 					duration: 0.5,
@@ -651,6 +780,8 @@ function raycast() {
 			}
 
 			if (clickedObject == '円柱007_1') {
+				intersects[i].object.material.matcap = texture3;
+				intersects[i].object.material.needsUpdate = true
 
 				gsap.to(meshes.myhat.scale, {
 					duration: 0.5,
@@ -703,7 +834,9 @@ function raycast() {
 			}
 			//cake
 			if (clickedObject == 'TorusKnot004_4') {
-				
+				intersects[i].object.material.matcap = texture4;
+				intersects[i].object.material.needsUpdate = true
+
 				gsap.to(meshes.myhat.scale, {
 					duration: 0.5,
 					x: 0,
@@ -757,6 +890,8 @@ function raycast() {
 			}
 
 			if (clickedObject == 'kami') {
+				intersects[i].object.material.matcap = texture2;
+				intersects[i].object.material.needsUpdate = true
 				gsap.to(meshes.myangelR.scale, {
 					duration: 0,
 					x: 0,
@@ -807,9 +942,6 @@ function raycast() {
 				});
 			}
 
-			// else if (clickedObject === cube2) {
-			// 	gsap.to(target2.scale, { duration: 0.5, x: 2, y: 2, z: 2 });
-			// }
 		}
 
 
@@ -817,49 +949,20 @@ function raycast() {
 	})
 }
 
-function learnGSAP() {
-	const button = document.querySelector('.tempButton')
-	button.addEventListener('click', (event) => {
-		gsap.to(meshes.default.scale, {
-			x: 5,
-			y: 5,
-			z: 5,
-			duration: 3.5,
-			ease: 'power3.inOut',
-		})
-		gsap.to(meshes.standard.scale, {
-			x: .5,
-			y: .5,
-			z: .5,
-			duration: 3.5,
-			ease: 'power3.inOut',
-		})
-	})
 
-}
-
-
-// function resize() {
-// 	window.addEventListener('resize', () => {
-// 		renderer.setSize(window.innerWidth, window.innerHeight)
-// 		camera.aspect = window.innerWidth / window.innerHeight
-// 		camera.updateProjectionMatrix()
-// 	})
-// }
 
 function resize() {
 	window.addEventListener('resize', () => {
-		// 更新窗口宽度和高度
 		var width = window.innerWidth;
 		var height = window.innerHeight;
-		var k = width / height; // 更新窗口宽高比
-		renderer.setSize(width, height); // 更新渲染器大小
-		camera.left = -s * k; // 更新相机左侧参数
-		camera.right = s * k; // 更新相机右侧参数
-		camera.top = s; // 更新相机顶部参数
-		camera.bottom = -s; // 更新相机底部参数
-		camera.aspect = k; // 更新相机宽高比
-		camera.updateProjectionMatrix(); // 更新相机投影矩阵
+		var k = width / height;
+		renderer.setSize(width, height);
+		camera.left = -s * k;
+		camera.right = s * k;
+		camera.top = s;
+		camera.bottom = -s;
+		camera.aspect = k;
+		camera.updateProjectionMatrix();
 	});
 }
 
@@ -878,22 +981,26 @@ function animate() {
 
 
 	meshes.magicCircle.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), 0.002);
-	meshes.coverdrop1.scale.y += 0.01;
+
+
+	meshes.background1.position.y = Math.sin(tick * 3) * 0.3 + 6;
+	meshes.background2.position.y = Math.sin(tick * 3) * 0.3 + 6;
+	meshes.background3.position.y = Math.sin(tick * 3) * 0.3 + 6;
+
 
 	if (meshes.mybow) {
-		meshes.mybow.position.y = Math.sin(tick * 3) * 0.2 + 4;
+		meshes.mybow.position.y = Math.sin(tick * 3) * 0.2 + 3;
 	}
 
 	if (meshes.mybottle) {
 		meshes.mybottle.position.y = Math.sin(tick * 3.5) * 0.2 - 4;
+		meshes.mybottle.rotation.y += 0.008
 	}
 	if (meshes.mybear) {
 		meshes.mybear.position.y = Math.sin(tick * 3) * 0.2 + 5;
 		meshes.mybear.rotation.set(15 * Math.PI / 180, 0, 0)
 
 	}
-
-
 
 	if (meshes.mygirl) {
 		//meshes.girl.rotation.set(0, Math.PI, 0);
@@ -943,6 +1050,7 @@ function animate() {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mycake.rotation.set(15 * Math.PI / 180, 0, 0)
 		meshes.mycake.position.y = Math.sin(tick * 2) * 0.3 - 2;
+
 	}
 
 	if (meshes.mybook) {

@@ -5,10 +5,17 @@
 	overflow: hidden;
 	font-family: 'DotGothic16', sans-serif;
 	font-size: 30px;
+
 }
+
+body {
+    cursor: url('cursor.png'), auto; 
+}
+
+
 #info{
 	position: absolute;
-	top: 30px; /* 向下偏移 20px */
+	top: 30px;
     left: -500px;
 	width: 100%;
 	text-align: center;
@@ -20,7 +27,7 @@
 
 #info1{
 	position: absolute;
-	top: 450px; /* 向下偏移 20px */
+	top: 450px; 
     left: 460px;
 	width: 100%;
 	text-align: center;
@@ -33,8 +40,8 @@
 
 #info2{
 	position: absolute;
-	top: 90px; /* 向下偏移 20px */
-    left: 490px;
+	top: 140px; 
+    left: 470px;
 	width: 100%;
 	text-align: center;
 	z-index: 1;
@@ -45,7 +52,7 @@
 
 #info3{
 	position: absolute;
-	top: 450px; /* 向下偏移 20px */
+	top: 450px; 
     left: -450px;
 	width: 100%;
 	text-align: center;
@@ -57,7 +64,7 @@
 
 #info4{
 	position: absolute;
-	top: 600px; /* 向下偏移 20px */
+	top: 600px; 
     left: -550px;
 	width: 100%;
 	text-align: center;
@@ -69,36 +76,36 @@
 
 @keyframes moveUpDown {
     0% {
-        transform: translateY(0); /* 初始位置：不移动 */
+        transform: translateY(0); 
     }
     50% {
-        transform: translateY(-20px); /* 上移 20px */
+        transform: translateY(-20px); 
     }
     100% {
-        transform: translateY(0); /* 回到初始位置 */
+        transform: translateY(0); 
     }
 }
 
 @keyframes scaleAnimation {
     0% {
-        transform: scale(1); /* 初始大小：正常大小 */
+        transform: scale(1); 
     }
     50% {
-        transform: scale(1.2); /* 放大到 1.2 倍大小 */
+        transform: scale(1.2);
     }
     100% {
-        transform: scale(1); /* 回到正常大小 */
+        transform: scale(1); 
 	}
 }
 
 @keyframes colorAnimation {
     0% {
-		color: #feecff; /* 初始颜色：蓝色 */
+		color: #feecff; 
     }
     50% {
-        color: #c3d9fa; /* 中间颜色：红色 */
+        color: #c3d9fa;
     }
     100% {
-        color: #feecff; /* 回到初始颜色 */
+        color: #feecff; 
     }
 }
