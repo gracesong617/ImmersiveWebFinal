@@ -572,8 +572,6 @@ function raycast() {
 				scene.remove(meshes.cover)
 				scene.remove(meshes.button)
 				scene.remove(meshes.girlcover)
-				// const audio = document.querySelector('.introAudio')
-				// audio.play()
 				sound1.play()
 
 				controls.enabled = true
@@ -1063,33 +1061,33 @@ function animate() {
 	}
 
 	if (meshes.myhat) {
-		//meshes.button.rotation.y -= 0.01;
+
 		meshes.myhat.rotation.set(0, 180 * Math.PI / 180, 0)
-		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
+
 	}
 
 	if (meshes.mydoor) {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mydoor.rotation.set(0, 5 * Math.PI / 180, 0)
-		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
+
 	}
 
 	if (meshes.mybg) {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mybg.rotation.set(20 * Math.PI / 180, 0, 0)
-		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
+
 	}
 
 	if (meshes.mymap) {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mymap.rotation.set(1 * Math.PI / 180, 20 * Math.PI / 180, 0)
-		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
+
 	}
 
 	if (meshes.mystar) {
 		//meshes.button.rotation.y -= 0.01;
 		meshes.mystar.rotation.set(60 * Math.PI / 180, 0, 0)
-		//meshes.myhat.position.y = Math.sin(tick * 3) * 0.1 + 2.5;
+
 	}
 
 
