@@ -77,8 +77,8 @@ body {
 #info5{
 	position: absolute;
 	top: 20px; 
-    left: 1180px;
-	width: 20%;
+    left: 1200px;
+	width: 15%;
 	text-align: center;
 	z-index: 1;
 	display:none;
