@@ -133,7 +133,6 @@ modelCamera.position.z = 5;
 
 init()
 function init() {
-	//set up our renderer default settings, add scene/canvas to webpage
 	renderer.setSize(window.innerWidth, window.innerHeight)
 	document.body.appendChild(renderer.domElement)
 
@@ -203,8 +202,6 @@ function instances() {
 
 	})
 	girl.init()
-
-
 
 
 	const bear = new Model({
@@ -538,7 +535,6 @@ function raycast() {
 			rotationSpeed = -1
 			updateRotation();
 		}
-		// Check if the right arrow key is pressed
 		else if (event.key === "ArrowRight") {
 			rotationSpeed = 1
 			updateRotation();
@@ -547,7 +543,7 @@ function raycast() {
 	
 	window.addEventListener('keyup', (event) => {
 		if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-			rotationSpeed = 0; // Stop the rotation when the arrow key is released
+			rotationSpeed = 0; 
 		}
 	});
 
@@ -1024,7 +1020,6 @@ function animate() {
 	}
 
 	if (meshes.mygirl) {
-		//meshes.girl.rotation.set(0, Math.PI, 0);
 		meshes.mygirl.position.y = Math.sin(tick * 3) * 0.1 - 18.5;
 
 	}
@@ -1036,12 +1031,10 @@ function animate() {
 	}
 
 	if (meshes.button) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.button.position.y = Math.sin(tick * 3) * 0.2 - 0.1;
 	}
 
 	if (meshes.girlcover) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.girlcover.position.y = Math.sin(tick) * 0.2;
 	}
 
@@ -1068,44 +1061,37 @@ function animate() {
 	}
 
 	if (meshes.mycake) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.mycake.rotation.set(15 * Math.PI / 180, 0, 0)
 		meshes.mycake.position.y = Math.sin(tick * 2) * 0.3 - 2;
 
 	}
 
 	if (meshes.mybook) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.mybook.rotation.set(0, 180 * Math.PI / 180, 60 * Math.PI / 180)
 		meshes.mybook.position.y = Math.sin(tick * 3) * 0.2;
 	}
 
 	if (meshes.myhat) {
-
 		meshes.myhat.rotation.set(0, 180 * Math.PI / 180, 0)
 
 	}
 
 	if (meshes.mydoor) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.mydoor.rotation.set(0, 5 * Math.PI / 180, 0)
 
 	}
 
 	if (meshes.mybg) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.mybg.rotation.set(20 * Math.PI / 180, 0, 0)
 
 	}
 
 	if (meshes.mymap) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.mymap.rotation.set(1 * Math.PI / 180, 20 * Math.PI / 180, 0)
 
 	}
 
 	if (meshes.mystar) {
-		//meshes.button.rotation.y -= 0.01;
 		meshes.mystar.rotation.set(60 * Math.PI / 180, 0, 0)
 
 	}
@@ -1115,12 +1101,12 @@ function animate() {
 }
 
 
-var modal = document.getElementById('myModal');
-var closeBtn = document.getElementsByClassName('close')[0];
+let modal = document.getElementById('myModal');
+let closeBtn = document.getElementsByClassName('close')[0];
 
-// 获取确定和取消按钮元素
-var confirmBtn = document.getElementById('confirmButton');
-var cancelBtn = document.getElementById('cancelButton');
+
+let confirmBtn = document.getElementById('confirmButton');
+let cancelBtn = document.getElementById('cancelButton');
 
 
 textElement5.addEventListener('click', function(event) {
@@ -1144,21 +1130,20 @@ confirmBtn.onclick = function() {
 	location.reload();
 }
 
-// 当用户点击取消按钮时取消操作
+
 cancelBtn.onclick = function() {
     modal.style.display = 'none';
 }
 
 
 let rotationAngle = 0;
-let rotationSpeed = 0; // Rotation speed and direction: negative for left, positive for right
+let rotationSpeed = 0; 
 
-// Function to update the model's rotation
+
 function updateRotation() {
     rotationAngle += rotationSpeed;
     meshes.mygirl.rotation.y = rotationAngle * Math.PI / 180;
 
-    // Continue to update the rotation if speed is not zero
     if (rotationSpeed !== 0) {
         requestAnimationFrame(updateRotation);
     }
