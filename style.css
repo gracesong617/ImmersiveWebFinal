@@ -9,7 +9,7 @@
 }
 
 body {
-    cursor: url('cursor.png'), auto; 
+    cursor: url(“cursor.png”), auto; 
 }
 
 
@@ -83,7 +83,7 @@ body {
 	z-index: 1;
 	display:none;
 	animation: moveUpDown 3s infinite, colorAnimation1 3s infinite;
-	cursor: url('cursor3.png'), auto; 
+	cursor: url(“cursor3.png”), auto; 
 
 }
 
