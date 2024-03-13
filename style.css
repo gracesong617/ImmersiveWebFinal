@@ -166,7 +166,7 @@ body {
     float: right;
     font-size: 20px;
     font-weight: bold;
-	cursor: url('cursor3.png'), auto;
+	cursor: url(“cursor3.png”), auto;
 	border: 1.5px solid #845580;
 	padding-left: 5px;
 	padding-right: 5px;
@@ -177,7 +177,7 @@ body {
 .close:focus {
 
     text-decoration: none;
-    cursor: url('cursor3.png'), auto;
+    cursor: url(“cursor3.png”), auto;
 	justify-content: center;
 	text-align: center;
 	color: rgb(240, 227, 234);
@@ -189,7 +189,7 @@ body {
 	color: rgb(167, 117, 140);
     font-size: 20px;
     font-weight: bold;
-	cursor: url('cursor3.png'), auto;
+	cursor: url(“cursor3.png”), auto;
 	justify-content: center;
 	text-align: center;
 	border: 1px solid #845580;
@@ -201,7 +201,7 @@ body {
 .button:focus {
     color: rgb(240, 227, 234);
     text-decoration: none;
-    cursor: url('cursor3.png'), auto;
+    cursor: url(“cursor3.png”), auto;
 	justify-content: center;
 	text-align: center;
 	background-color:rgb(167, 117, 140);
