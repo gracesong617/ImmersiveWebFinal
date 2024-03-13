@@ -112,6 +112,7 @@ controls.enableDamping = true
 controls.dampingFactor = 0.08
 controls.enablePan = false
 controls.enableZoom = true
+const currentState = controls.saveState();
 controls.maxZoom = 2;
 controls.minZoom = 1;
 controls.minAzimuthAngle = -10 * Math.PI / 180;
@@ -531,7 +532,24 @@ function raycast() {
 
 
 	})
+	window.addEventListener('keydown', (event) => {
 
+		if (event.key === "ArrowLeft") {
+			rotationSpeed = -1
+			updateRotation();
+		}
+		// Check if the right arrow key is pressed
+		else if (event.key === "ArrowRight") {
+			rotationSpeed = 1
+			updateRotation();
+		}
+	});
+	
+	window.addEventListener('keyup', (event) => {
+		if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+			rotationSpeed = 0; // Stop the rotation when the arrow key is released
+		}
+	});
 
 
 
@@ -776,6 +794,8 @@ function raycast() {
 					y: 0,
 					z: 0,
 				});
+				meshes.mygirl.rotation.y = 0;
+        
 
 
 			}
@@ -1128,3 +1148,19 @@ confirmBtn.onclick = function() {
 cancelBtn.onclick = function() {
     modal.style.display = 'none';
 }
+
+
+let rotationAngle = 0;
+let rotationSpeed = 0; // Rotation speed and direction: negative for left, positive for right
+
+// Function to update the model's rotation
+function updateRotation() {
+    rotationAngle += rotationSpeed;
+    meshes.mygirl.rotation.y = rotationAngle * Math.PI / 180;
+
+    // Continue to update the rotation if speed is not zero
+    if (rotationSpeed !== 0) {
+        requestAnimationFrame(updateRotation);
+    }
+}
+
