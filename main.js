@@ -23,7 +23,7 @@ const textElement1 = document.querySelector('.info1');
 const textElement2 = document.querySelector('.info2');
 const textElement3 = document.querySelector('.info3');
 const textElement4 = document.querySelector('.info4');
-
+const textElement5 = document.querySelector('.info5');
 
 const tloader = new THREE.TextureLoader()
 const texture = tloader.load('matcap13.png')
@@ -36,10 +36,8 @@ const texture4 = tloader.load('matcap31.png')
 const scene = new THREE.Scene()
 const meshes = {}
 const lights = {}
-const composer = post(scene, camera, renderer)
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
-//pointer.x or pointer.y
 const mixers = []
 
 const listener = new THREE.AudioListener()
@@ -67,13 +65,16 @@ audioLoader.load('/music3.mp3', function (buffer) {
 
 
 const songs = [sound1, sound2, sound3]
-var currentSongIndex = 0;
-var isPlaying = false;
+let currentSongIndex = 0;
+
 
 let volume1 = 0.3;
 let volume2 = 0.1
 let volume3 = 0.1
 const volumeStep = 0.05;
+
+const colors = [0xD8BFD8,0x9FC5E8,0xFFCFE6]
+
 
 window.addEventListener('wheel', function (event) {
 	const currentSound = songs[currentSongIndex];
@@ -550,6 +551,7 @@ function raycast() {
 				songs[currentSongIndex].stop();
 				currentSongIndex = (currentSongIndex + 1) % songs.length;
 				songs[currentSongIndex].play();
+				meshes.background.material.color.setHex(colors[currentSongIndex])
 	
 			}
 
@@ -584,6 +586,7 @@ function raycast() {
 				textElement2.style.display = 'block';
 				textElement3.style.display = 'block';
 				textElement4.style.display = 'block';
+				textElement5.style.display = 'block';
 				gsap.to(meshes.background1.scale, {
 					duration: 1,
 					x: 1,
@@ -1091,4 +1094,39 @@ function animate() {
 
 
 	renderer.render(scene, camera)
+}
+
+
+var modal = document.getElementById('myModal');
+var closeBtn = document.getElementsByClassName('close')[0];
+
+// 获取确定和取消按钮元素
+var confirmBtn = document.getElementById('confirmButton');
+var cancelBtn = document.getElementById('cancelButton');
+
+
+textElement5.addEventListener('click', function(event) {
+	modal.style.display = 'block';
+   
+});
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = 'none';
+}
+
+
+confirmBtn.onclick = function() {
+    modal.style.display = 'none';
+	location.reload();
+}
+
+// 当用户点击取消按钮时取消操作
+cancelBtn.onclick = function() {
+    modal.style.display = 'none';
 }

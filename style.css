@@ -74,6 +74,19 @@ body {
 
 }
 
+#info5{
+	position: absolute;
+	top: 20px; 
+    left: 650px;
+	width: 100%;
+	text-align: center;
+	z-index: 1;
+	display:none;
+	animation: moveUpDown 3s infinite, colorAnimation1 3s infinite;
+	cursor: url('cursor3.png'), auto; 
+
+}
+
 @keyframes moveUpDown {
     0% {
         transform: translateY(0); 
@@ -108,4 +121,89 @@ body {
     100% {
         color: #feecff; 
     }
+}
+
+@keyframes colorAnimation1 {
+    0% {
+		color: #c3d9fa; 
+    }
+    50% {
+        color:#feecff;
+    }
+    100% {
+        color: #c3d9fa; 
+    }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+	justify-content: center;
+	text-align: center;
+}
+
+.modal-content {
+    background-color:rgb(240, 227, 234);
+    margin: 28% auto;
+    padding: 20px;
+    border: 2px solid #845580;
+    width: 50%;
+	justify-content: center;
+	text-align: center;
+	color: rgb(167, 117, 140);
+}
+
+/* 关闭按钮样式 */
+.close {
+	color: rgb(167, 117, 140);
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+	cursor: url('cursor3.png'), auto;
+	border: 1.5px solid #845580;
+	padding-left: 5px;
+	padding-right: 5px;
+
+}
+
+.close:hover,
+.close:focus {
+
+    text-decoration: none;
+    cursor: url('cursor3.png'), auto;
+	justify-content: center;
+	text-align: center;
+	color: rgb(240, 227, 234);
+	background-color:rgb(167, 117, 140);
+
+}
+
+.button {
+	color: rgb(167, 117, 140);
+    font-size: 20px;
+    font-weight: bold;
+	cursor: url('cursor3.png'), auto;
+	justify-content: center;
+	text-align: center;
+	border: 1px solid #845580;
+    padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.button:hover,
+.button:focus {
+    color: rgb(240, 227, 234);
+    text-decoration: none;
+    cursor: url('cursor3.png'), auto;
+	justify-content: center;
+	text-align: center;
+	background-color:rgb(167, 117, 140);
+
 }
